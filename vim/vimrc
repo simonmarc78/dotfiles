@@ -1,0 +1,332 @@
+
+set nocompatible
+filetype off			" required
+
+" ----------------------------------------------------------------
+" Plug configuration starts here
+
+" Specify a directory for plugins
+" - For Neovim: ~/.local/share/nvim/plugged
+"   " - Avoid using standard Vim directory names like 'plugin'
+"   call plug#begin('~/.vim/plugged')
+call plug#begin('~/.vim/plugged')
+
+
+" fugitive - best git interface for vim
+Plug 'tpope/vim-fugitive'
+
+" Ctrl-P: buffer/file/mru/tag explorer with fuzzy text matching
+Plug 'kien/ctrlp.vim'
+
+" gundo - visualise the vim undo tree
+Plug 'sjl/gundo.vim'
+
+" flake8 - python syntax/style checker
+Plug 'nvie/vim-flake8'
+
+" Base16 vim themes
+Plug 'chriskempson/base16-vim'
+
+" YCM - a fast, as-you-type, fuzzy-search code completion engine
+"Plug 'Valloric/YouCompleteMe'
+
+" Neocomplete - code completion
+Plug 'Shougo/neocomplete.vim'
+
+" Solarized colours
+Plug 'altercation/vim-colors-solarized'
+
+" NERDTree
+Plug 'scrooloose/nerdtree'
+
+" NERDCommenter
+Plug 'scrooloose/nerdcommenter'
+
+" Syntastic
+Plug 'scrooloose/syntastic'
+
+" Airline
+Plug 'bling/vim-airline'
+
+" GO plugin
+Plug 'fatih/vim-go'
+
+" Python syntax
+Plug 'hdima/python-syntax'
+
+" Window swapping
+"Plug 'wesQ3/vim-windowswap'
+
+" HTML etc
+Plug 'mattn/emmet-vim'
+
+" Tag closing
+Plug 'alvan/vim-closetag'
+
+" All plugins must be added before this line
+call plug#end()		" required
+filetype plugin indent on	" required
+
+" plug configuration ends here
+" ----------------------------------------------------------------
+
+" ----------------------------------------------------------------
+" General Settings
+
+set fileformat=unix
+set fileformats=unix,dos
+
+" Autoreload .vimrc on edit
+autocmd! bufwritepost .vimrc source %
+autocmd! bufwritepost .vim/vimrc source %
+
+" Better copy & paste
+set pastetoggle=<F2>
+set clipboard=unnamed
+
+" Rebind <leader>
+let mapleader = ","
+
+" Disable arrow keys. Wow!!!
+nmap <up> <Nop>
+nmap <left> <Nop>
+nmap <right> <Nop>
+nmap <down> <Nop>
+imap <up> <Nop>
+imap <left> <Nop>
+imap <right> <Nop>
+imap <down> <Nop>
+vmap <up> <Nop>
+vmap <left> <Nop>
+vmap <right> <Nop>
+vmap <down> <Nop>
+
+" Smash escape (thanks Roy!)
+inoremap jk <esc>
+inoremap kj <esc>
+
+" toggle invisible characters
+nmap <leader>l :set list!<CR>
+
+" Use the same symbols as TextMate for tabstops and EOLs
+set listchars=tab:?\ ,eol:$
+
+" Make it obvious where 80 characters is
+set textwidth=80
+set colorcolumn=+1
+
+" Open new splits panes to right and bottom
+set splitbelow
+set splitright
+
+" clear white space
+nmap <leader>w :%s/\s\+$//<CR>
+
+" Map Ctrl+<movement> key to navigate windows
+map <c-j> <c-w>j
+map <c-k> <c-w>k
+map <c-l> <c-w>l
+map <c-h> <c-w>h
+
+" map sort function to a key
+vnoremap <Leader>s :sort<CR>
+
+" easier moving of code blocks
+vnoremap < <gv " better indentation
+vnoremap > >gv " better indentation
+
+" Set line numbers
+set number
+
+" display cursor position at all times
+set ruler		      
+
+" display incomplete commands
+set showcmd		    
+
+" Always display the status line
+set laststatus=2
+
+" set tabs
+set tabstop=4     " size of hard stop
+set shiftwidth=4  " size of indent
+set backspace=2   " Backspace deletes in insert mode
+set smarttab      " insert indent instead of tab at beginning of line
+set shiftround    " To help when line wrapping?
+
+" Map wb to open curent file in web browser
+nmap <leader>b :silent !xdg-open % &<CR>
+
+" Syntax highlighting on
+syntax on
+
+" Default encoding
+set encoding=utf-8
+
+" Hide those menus if we are in gvim or similar
+if has("gui_running")
+  set guioptions -=m  " hide the menu bar
+  set guioptions -=T  " hide the toolbar
+  set guioptions -=L
+  set guioptions -=l
+  set guioptions -=R
+  set guioptions -=r
+  colorscheme base16-monokai
+  if has('unix')
+    set guifont=Monospace\ Regular\ 13
+  else
+    set guifont=Ubuntu_Mono:h13
+  endif
+else
+  " Terminal colourscheme
+  colorscheme slate
+endif
+
+" Save your backups to a less annoying place than the current directory.
+" If you have .vim-backup in the current directory, it'll use that.
+" Otherwise it saves it to ~/.vim/backup or . if all else fails.
+if isdirectory($HOME . '/.vim/backup') == 0
+  :silent !mkdir -p ~/.vim/backup >/dev/null 2>&1
+endif
+set backupdir-=.
+set backupdir+=.
+set backupdir-=~/
+set backupdir^=~/.vim/backup/
+set backupdir^=./.vim-backup/
+set backup
+
+" Save your swp files to a less annoying place than the current directory.
+" If you have .vim-swap in the current directory, it'll use that.
+" Otherwise it saves it to ~/.vim/swap, ~/tmp or .
+if isdirectory($HOME . '/.vim/swap') == 0
+  :silent !mkdir -p ~/.vim/swap >/dev/null 2>&1
+endif
+set directory=./.vim-swap//
+set directory+=~/.vim/swap//
+set directory+=~/tmp//
+set directory+=.
+
+" viminfo stores the the state of your previous editing session
+set viminfo+=n~/.vim/viminfo
+
+if exists("+undofile")
+  " undofile - This allows you to use undos after exiting and restarting
+  " This, like swap and backups, uses .vim-undo first, then ~/.vim/undo
+  " :help undo-persistence
+  " This is only present in 7.3+
+  if isdirectory($HOME . '/.vim/undo') == 0
+    :silent !mkdir -p ~/.vim/undo > /dev/null 2>&1
+  endif
+  set undodir=./.vim-undo//
+  set undodir+=~/.vim/undo//
+  set undofile
+endif
+
+" ----------------------------------------------------------------
+" Plugin Settings
+
+" statusline settings
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+
+" nerdtree
+" Set NERDTree to work in current dir
+let g:NERDTreeChDirMode=2
+nmap <leader>ne :NERDTree<cr>
+nmap <leader>n :NERDTreeToggle<cr>
+
+" Tag closing file types
+let g:closetag_filenames = "*.html,*.xhtml,*.xml,*.jinja"
+
+" ----------------------------------------------------------------
+" Syntax Settings
+
+" neocomplete on
+let g:neocomplete#enable_at_startup=1
+let g:neocomplete#enable_auto_close_preview=1
+
+
+"" syntastic conf
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
+let g:syntastic_loc_list_height=5
+let g:syntastic_error_symbol = "?"
+let g:syntastic_warning_symbol = "?"
+
+"vim
+autocmd FileType vim setlocal expandtab shiftwidth=2 tabstop=8 softtabstop=2
+
+" JSON
+autocmd FileType json setlocal expandtab shiftwidth=2 tabstop=2 softtabstop=2
+
+" Python syntax
+autocmd FileType python setlocal expandtab shiftwidth=4 softtabstop=4 tabstop=8
+let g:syntastic_python_checkers = ['pylint']
+let python_highlight_all = 1
+
+" JavaScript syntax
+autocmd FileType javascript setlocal expandtab shiftwidth=2 tabstop=2 softtabstop=2
+autocmd FileType javascript setlocal commentstring=//\ %s
+autocmd FileType javascript noremap <buffer> <leader>r :call JsBeautify()<cr>
+autocmd FileType javascript let b:javascript_fold = 0
+let javascript_enable_domhtmlcss=1
+"let g:syntastic_javascript_checkers = ['jshint'] 
+"let g:syntastic_javascript_jshint_args='--config ~/.vim/extern-cfg/jshint.json'
+let g:syntastic_javascript_checkers = ['eslint']
+
+" backup local cwd
+" and change it to the directory of the current file
+let s:lcd = fnameescape(getcwd())
+silent! exec "lcd" expand('%:p:h')
+
+" detect shell and choose the command to find the eslint executable
+if &shell =~# 'fish'
+  let s:which_cmd = 'begin; set -lx PATH (npm bin --silent) $PATH; and which eslint; end'
+else
+  let s:which_cmd = 'PATH=$(npm bin --silent):$PATH && which eslint'
+endif
+
+" get the path of the eslint executable
+" and set it as a checker for the current buffer
+let s:eslint_path = system(s:which_cmd)
+
+if has('unix')
+  let g:syntastic_javascript_eslint_exec = substitute(s:eslint_path, '^\n*\s*\(.\{-}\)\n*\s*$', '\1', '')
+else
+  let g:syntastic_javascript_eslint_exec = 'C:\Users\mhr39349\AppData\Roaming\npm\eslint.cmd'
+endif
+
+" HTML
+autocmd FileType xml,html setlocal expandtab shiftwidth=2 tabstop=2 softtabstop=2
+let g:syntastic_html_checkers = ['validator']
+
+" CSS
+autocmd FileType css setlocal expandtab shiftwidth=2 tabstop=4 softtabstop=2
+autocmd FileType css setlocal commentstring=/*\ %s\ */
+autocmd FileType css noremap <buffer> <leader>r :call CSSBeautify()<cr>
+
+" Less
+autocmd FileType less setlocal expandtab shiftwidth=2 tabstop=8 softtabstop=2
+
+" Sass
+autocmd FileType scss setlocal expandtab shiftwidth=2 tabstop=8 softtabstop=2
+
+" Go
+autocmd BufNewFile,BufRead *.go setlocal ft=go
+autocmd FileType go setlocal shiftwidth=4 tabstop=4 softtabstop=4
+let g:syntastic_go_checkers = ['go', 'golint', 'govet', 'errcheck']
+let g:go_highlight_functions = 1
+let g:go_highlight_methods = 1
+let g:go_highlight_structs = 1
+let g:go_highlight_operators = 1
+let g:go_highlight_build_constraints = 1
+let g:go_highlight_types = 1
+let g:go_highlight_fields = 1
+
+" PowerShell
+autocmd BufRead,BufNewFile *.ps1,*.psm,*.psm1 setlocal expandtab shiftwidth=4 
+\ softtabstop=4 tabstop=8
+
